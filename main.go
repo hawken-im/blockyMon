@@ -5,8 +5,6 @@ import (
 	"blockymon/terminal"
 	"blockymon/tray"
 	"os"
-	"sync"
-	"time"
 
 	"github.com/getlantern/systray"
 	log "github.com/sirupsen/logrus"
@@ -19,12 +17,9 @@ func main() {
 	}
 	log.SetOutput(f)
 
-	var wg sync.WaitGroup
-
 	var monster monster.Monster
 	monster.Initialize()
-	go systray.Run(tray.OnReady, tray.OnQuit)
 	go terminal.Input()
-	wg.Wait()
-	time.Sleep(time.Hour)
+	systray.Run(tray.OnReady, tray.OnQuit)
+
 }
