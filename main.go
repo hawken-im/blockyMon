@@ -2,24 +2,40 @@ package main
 
 import (
 	"blockymon/monster"
-	"blockymon/terminal"
 	"blockymon/tray"
-	"os"
+	"container/list"
+	"fmt"
+	"time"
 
 	"github.com/getlantern/systray"
-	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	f, err := os.OpenFile("monsters.log", os.O_WRONLY|os.O_CREATE, 0755) //log file
+	/*f, err := os.OpenFile("monsters.log", os.O_WRONLY|os.O_CREATE, 0755) //log file
 	if err != nil {
 		panic(err)
 	}
-	log.SetOutput(f)
+	log.SetOutput(f)*/
 
-	var monster monster.Monster
-	monster.Initialize()
-	go terminal.Input()
+	var myMonster monster.Monster
+
+	var petName string
+	fmt.Print("Enter pet name: ")
+	//	fmt.Scanf("%s", &petName)
+	petName = "lulu"
+	myMonster.Initialize("001", petName, time.Now())
+	myAlbum := list.New()
+	fmt.Println(myMonster.AlbumShot(time.Now(), myAlbum))
+
+	go func() {
+		var action string
+		for {
+			fmt.Print("Enter your action: ")
+			fmt.Scanf("%s", &action)
+			myMonster.TakeAction(action)
+			fmt.Println(myMonster.AlbumShot(time.Now(), myAlbum))
+		}
+	}()
 	systray.Run(tray.OnReady, tray.OnQuit)
 
 }
